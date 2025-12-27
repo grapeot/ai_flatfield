@@ -28,9 +28,5 @@ frames/
 *.ser
 *.tiff
 *.png
-*.jpg
 *.fits
 *.txt
-!requirements.txt
-!README.md
-
