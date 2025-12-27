@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Gemini API调用模块
+Gemini API (Nano Banana Pro) 调用模块
 """
 
 import os
@@ -12,7 +12,7 @@ from image_utils import numpy_to_image_bytes, save_binary_file, png_to_tiff_16bi
 
 
 def process_with_gemini(median_flatfield, prompt="Analyze this image and generate a mask highlighting important features."):
-    """使用Gemini处理median flat field并获取遮罩"""
+    """使用 Gemini (Nano Banana Pro) 处理 median flat field 并获取遮罩"""
     client = genai.Client(
         api_key=os.environ.get("GEMINI_API_KEY"),
     )
@@ -50,7 +50,7 @@ def process_with_gemini(median_flatfield, prompt="Analyze this image and generat
         tools=tools,
     )
     
-    print("Sending median flat field to Gemini...")
+    print("Sending median flat field to Gemini (Nano Banana Pro)...")
     file_index = 0
     mask_files_png = []
     mask_files_tiff = []
@@ -86,17 +86,17 @@ def process_with_gemini(median_flatfield, prompt="Analyze this image and generat
             if chunk.text:
                 print(chunk.text, end="")
     
-    print(f"\nReceived {len(mask_files_png)} mask file(s) from Gemini")
+    print(f"\nReceived {len(mask_files_png)} mask file(s) from Gemini (Nano Banana Pro)")
     return mask_files_tiff
 
 
 def generate_inpainted_image(median_flatfield, expanded_mask, prompt=None):
     """
-    使用Gemini生成inpainted图像（去除dust）
+    使用 Gemini (Nano Banana Pro) 生成 inpainted 图像（去除 dust）
     Args:
-        median_flatfield: 原始flat field图像
-        expanded_mask: 扩展后的mask（0-1之间）
-        prompt: 可选的prompt，如果为None则使用默认prompt
+        median_flatfield: 原始 flat field 图像
+        expanded_mask: 扩展后的 mask（0-1之间）
+        prompt: 可选的 prompt，如果为 None 则使用默认 prompt
     """
     if prompt is None:
         prompt = """Your task is to perform high-precision inpainting on a CMOS sensor flat field image to remove dust shadows.
@@ -164,7 +164,7 @@ INSTRUCTIONS:
         tools=tools,
     )
     
-    print("Sending median flat field to Gemini for inpainting...")
+    print("Sending median flat field to Gemini (Nano Banana Pro) for inpainting...")
     file_index = 0
     inpainted_files_png = []
     inpainted_files_tiff = []
@@ -200,6 +200,5 @@ INSTRUCTIONS:
             if chunk.text:
                 print(chunk.text, end="")
     
-    print(f"\nReceived {len(inpainted_files_png)} inpainted image(s) from Gemini")
+    print(f"\nReceived {len(inpainted_files_png)} inpainted image(s) from Gemini (Nano Banana Pro)")
     return inpainted_files_tiff
-

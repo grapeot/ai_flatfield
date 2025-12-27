@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 AI Flat Field Correction - 主程序
-使用 Gemini AI 进行天文图像 flat field 校正
+使用 Gemini AI (Nano Banana Pro) 进行天文图像 flat field 校正
 """
 
 import argparse
@@ -67,14 +67,14 @@ def main():
     show_image(median_flatfield, "Median Flat Field", wait_key=True, 
                prompt="Review the median flat field. Press any key to continue...")
     
-    # 步骤2: 使用Gemini生成mask0
+    # 步骤2: 使用Gemini (Nano Banana Pro)生成mask0
     print("\n=== Step 2: Generating Dust Mask ===")
     mask0_path = f'mask_0_{ser_stem}.tiff'
     if Path(mask0_path).exists():
         print(f"Using existing mask: {mask0_path}")
         mask0 = imread(mask0_path)
     else:
-        print("Generating mask0 with Gemini...")
+        print("Generating mask0 with Gemini (Nano Banana Pro)...")
         mask_files = process_with_gemini(
             median_flatfield,
             prompt="This is an astronomical imaging flat field image from a sensor that contains dust particles. First, identify what type of astronomical image this is. Then generate a de-dusting mask image where pixel values range from 0 to 1: 0 indicates areas that should remain unchanged (clean areas), and 1 indicates areas that need dust removal (dust-covered areas). Values between 0 and 1 are acceptable for partial coverage. The mask must be tight and closely follow the detected dust particles, avoiding unnecessary coverage of clean areas."
@@ -131,7 +131,7 @@ def main():
         imwrite(expanded_mask_path, mask0_expanded_16bit)
         print(f"Saved expanded mask to: {expanded_mask_path} (shape: {mask0_expanded_16bit.shape})")
     
-    # 步骤4: 使用Gemini生成inpainted图像（支持重试）
+    # 步骤4: 使用Gemini (Nano Banana Pro)生成inpainted图像（支持重试）
     print("\n=== Step 4: Generating Inpainted Image ===")
     inpainted_path = f'inpainted_{ser_stem}.tiff'
     
@@ -140,7 +140,7 @@ def main():
             print(f"Using existing inpainted image: {inpainted_path}")
             inpainted_image = imread(inpainted_path)
         else:
-            print("Generating inpainted image with Gemini...")
+            print("Generating inpainted image with Gemini (Nano Banana Pro)...")
             inpainted_files = generate_inpainted_image(median_flatfield, mask0_expanded)
             
             if inpainted_files:

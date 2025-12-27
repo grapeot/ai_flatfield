@@ -27,6 +27,5 @@ Thumbs.db
 frames/
 *.ser
 *.tiff
-*.png
 *.fits
 *.txt

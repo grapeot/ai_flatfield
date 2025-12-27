@@ -2,22 +2,22 @@
 
 [中文版](./README.md)
 
-An automated sensor dust detection and flat-field correction suite leveraging the power of Google Gemini AI, specifically engineered for astrophotography.
+An automated sensor dust detection and flat-field correction suite leveraging the power of Google Gemini AI (Nano Banana Pro), specifically engineered for astrophotography.
 
 ## Motivation
 
 In astrophotography, dust particles on the sensor surface create unsightly dark spots (donuts), which can significantly degrade image quality. While traditional flat-field calibration is standard practice, it becomes increasingly cumbersome when calibration frames themselves are inaccurate or when dust shifts during an imaging session.
 
-This project aims to automate dust identification using advanced AI vision models and generate "ideal," dust-free reference frames via state-of-the-art inpainting techniques. This ensures a smarter, more precise calibration workflow for astronomical data.
+This project aims to automate dust identification using advanced AI vision models (Nano Banana Pro) and generate "ideal," dust-free reference frames via state-of-the-art inpainting techniques. This ensures a smarter, more precise calibration workflow for astronomical data.
 
 ## Key Algorithms
 
 The tool implements a sophisticated pipeline combining traditional digital image processing with modern Large Language Model (LLM) capabilities:
 
 1.  **Median Flat Field Computation**: Frames are extracted from a video stream (SER file), and a median is calculated along the temporal dimension. This effectively eliminates transient signals like cosmic rays or sensor noise, isolating the pure static flat field and dust characteristics.
-2.  **AI Dust Detection**: The median flat field is sent to the Gemini AI model. Leveraging its visual reasoning, the model identifies sensor defects such as dust and smudges, generating a high-precision initial mask.
+2.  **AI Dust Detection**: The median flat field is sent to the Gemini AI (Nano Banana Pro) model. Leveraging its visual reasoning, the model identifies sensor defects such as dust and smudges, generating a high-precision initial mask.
 3.  **Soft Mask Expansion**: The AI-generated mask undergoes a 10-pixel binary dilation followed by a Gaussian blur. This ensures the mask fully encapsulates the dust edges and facilitates a seamless, natural transition during the blending phase.
-4.  **AI Inpainting**: A second call to Gemini is made, providing both the original image and the expanded mask. The model is tasked with inpainting *only* within the masked regions, reconstructing the obscured details to create a "clean" reference image.
+4.  **AI Inpainting**: A second call to Gemini (Nano Banana Pro) is made, providing both the original image and the expanded mask. The model is tasked with inpainting *only* within the masked regions, reconstructing the obscured details to create a "clean" reference image.
 5.  **Histogram Matching**: A critical normalization step. Since generative models can introduce slight global luminance shifts, we perform histogram matching on the unmasked regions (mask=0) to map the inpainted result precisely back into the original image's intensity space.
 6.  **Final Synthesis**: The correction factor is synthesized using the formula: `final_flatfield = (1 - mask) * 1.0 + mask * (median_flatfield / inpainted)`. This ensures that "clean" areas remain untouched (factor exactly 1.0), while dust-affected regions receive precise intensity compensation.
 
@@ -49,14 +49,14 @@ This project requires access to the Google Gemini API. Create a `.env` file in t
 GEMINI_API_KEY=your_actual_gemini_api_key
 ```
 
-You can obtain a free API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+You can obtain an API key from [Google AI Studio](https://aistudio.google.com/app/apikey). Note that while the API key itself is free, using the Gemini (Nano Banana Pro) model may incur costs or be subject to specific quota limits.
 
 ### 3. Execution
 
-Place your `.ser` file in the project directory, update the `ser_file` variable in `main.py` accordingly, and run:
+Place your `.ser` file in the project directory and run:
 
 ```bash
-python main.py
+python main.py --input your_filename.ser
 ```
 
 The program operates in an interactive wizard mode, allowing you to preview results at every stage:
@@ -67,18 +67,26 @@ The program operates in an interactive wizard mode, allowing you to preview resu
 
 ### 4. Integration with PixInsight
 
-The output `final_flatfield.tiff` is a 16-bit uint16 image where a value of 65535 corresponds to a factor of 1.0. You can apply this correction in PixInsight using PixelMath:
+The output `final_flatfield.tiff` is a 16-bit uint16 image where a value of 65535 corresponds to a factor of 1.0. In PixInsight, you can use it directly.
+
+**Method 1: PixelMath Correction**
+In PixelMath, you can use the following formula to correct your original image:
 
 ```javascript
-$T / (final_flatfield / 65535)
+$T / final_flatfield
 ```
+
+**Method 2: Image Calibration Process**
+You can also use it as a Flat Field in the PixInsight `Image Calibration` process. Simply select `final_flatfield.tiff` in the Flat Field section:
+
+![Image Calibration](./imgs/image_calibration.png)
 
 ## Project Structure
 
 *   `main.py`: Main entry point managing the interactive workflow.
 *   `ser_reader.py`: Efficient handling of SER headers and frame extraction.
 *   `flatfield.py`: Core mathematical operations including median calculation and histogram matching.
-*   `gemini_client.py`: API wrappers for Gemini AI (Detection & Inpainting).
+*   `gemini_client.py`: API wrappers for Gemini AI (Nano Banana Pro) (Detection & Inpainting).
 *   `mask_processing.py`: Handling mask dilation, blurring, and smoothing.
 *   `image_utils.py`: Utilities for scaling, format conversion, and OpenCV display.
 
@@ -86,4 +94,3 @@ $T / (final_flatfield / 65535)
 
 *   **Memory Usage**: All frames from the SER file are loaded into memory for median calculation. Ensure your system has sufficient RAM or limit the frame count.
 *   **Idempotency**: The script automatically skips steps if intermediate files already exist. To force a re-run, delete the corresponding `.tiff` files.
-
