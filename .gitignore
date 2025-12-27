@@ -29,3 +29,5 @@ frames/
 *.tiff
 *.fits
 *.txt
+!requirements.txt
+blog_imgs/

@@ -66,25 +66,27 @@ def process_with_gemini(median_flatfield, prompt="Analyze this image and generat
             or chunk.candidates[0].content.parts is None
         ):
             continue
-        if chunk.candidates[0].content.parts[0].inline_data and chunk.candidates[0].content.parts[0].inline_data.data:
-            file_name = f"mask_{file_index}"
-            file_index += 1
-            inline_data = chunk.candidates[0].content.parts[0].inline_data
-            data_buffer = inline_data.data
-            file_extension = mimetypes.guess_extension(inline_data.mime_type)
-            if file_extension is None:
-                file_extension = ".png"
-            full_file_name_png = f"{file_name}{file_extension}"
-            save_binary_file(full_file_name_png, data_buffer)
-            mask_files_png.append(full_file_name_png)
-            
-            # 将PNG转回16位TIFF
-            full_file_name_tiff = f"{file_name}.tiff"
-            png_to_tiff_16bit(full_file_name_png, full_file_name_tiff, original_shape=median_flatfield.shape)
-            mask_files_tiff.append(full_file_name_tiff)
-        else:
-            if chunk.text:
-                print(chunk.text, end="")
+        
+        # 遍历所有parts，查找图像数据
+        for part in chunk.candidates[0].content.parts:
+            if part.inline_data and part.inline_data.data:
+                file_name = f"mask_{file_index}"
+                file_index += 1
+                inline_data = part.inline_data
+                data_buffer = inline_data.data
+                file_extension = mimetypes.guess_extension(inline_data.mime_type)
+                if file_extension is None:
+                    file_extension = ".png"
+                full_file_name_png = f"{file_name}{file_extension}"
+                save_binary_file(full_file_name_png, data_buffer)
+                mask_files_png.append(full_file_name_png)
+                
+                # 将PNG转回16位TIFF
+                full_file_name_tiff = f"{file_name}.tiff"
+                png_to_tiff_16bit(full_file_name_png, full_file_name_tiff, original_shape=median_flatfield.shape)
+                mask_files_tiff.append(full_file_name_tiff)
+            elif part.text:
+                print(part.text, end="")
     
     print(f"\nReceived {len(mask_files_png)} mask file(s) from Gemini (Nano Banana Pro)")
     return mask_files_tiff
@@ -180,25 +182,27 @@ INSTRUCTIONS:
             or chunk.candidates[0].content.parts is None
         ):
             continue
-        if chunk.candidates[0].content.parts[0].inline_data and chunk.candidates[0].content.parts[0].inline_data.data:
-            file_name = f"inpainted_{file_index}"
-            file_index += 1
-            inline_data = chunk.candidates[0].content.parts[0].inline_data
-            data_buffer = inline_data.data
-            file_extension = mimetypes.guess_extension(inline_data.mime_type)
-            if file_extension is None:
-                file_extension = ".png"
-            full_file_name_png = f"{file_name}{file_extension}"
-            save_binary_file(full_file_name_png, data_buffer)
-            inpainted_files_png.append(full_file_name_png)
-            
-            # 将PNG转回16位TIFF
-            full_file_name_tiff = f"{file_name}.tiff"
-            png_to_tiff_16bit(full_file_name_png, full_file_name_tiff, original_shape=median_flatfield.shape)
-            inpainted_files_tiff.append(full_file_name_tiff)
-        else:
-            if chunk.text:
-                print(chunk.text, end="")
+        
+        # 遍历所有parts，查找图像数据
+        for part in chunk.candidates[0].content.parts:
+            if part.inline_data and part.inline_data.data:
+                file_name = f"inpainted_{file_index}"
+                file_index += 1
+                inline_data = part.inline_data
+                data_buffer = inline_data.data
+                file_extension = mimetypes.guess_extension(inline_data.mime_type)
+                if file_extension is None:
+                    file_extension = ".png"
+                full_file_name_png = f"{file_name}{file_extension}"
+                save_binary_file(full_file_name_png, data_buffer)
+                inpainted_files_png.append(full_file_name_png)
+                
+                # 将PNG转回16位TIFF
+                full_file_name_tiff = f"{file_name}.tiff"
+                png_to_tiff_16bit(full_file_name_png, full_file_name_tiff, original_shape=median_flatfield.shape)
+                inpainted_files_tiff.append(full_file_name_tiff)
+            elif part.text:
+                print(part.text, end="")
     
     print(f"\nReceived {len(inpainted_files_png)} inpainted image(s) from Gemini (Nano Banana Pro)")
     return inpainted_files_tiff
