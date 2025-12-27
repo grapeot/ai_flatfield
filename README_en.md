@@ -79,7 +79,7 @@ $T / final_flatfield
 **Method 2: Image Calibration Process**
 You can also use it as a Flat Field in the PixInsight `Image Calibration` process. Simply select `final_flatfield.tiff` in the Flat Field section:
 
-![Image Calibration](./imgs/image_calibration.png)
+<img src="./imgs/image_calibration.png" alt="Image Calibration" style="max-width: 300px;" />
 
 ## Project Structure
 

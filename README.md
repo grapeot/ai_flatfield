@@ -77,9 +77,9 @@ $T / final_flatfield
 ```
 
 **方法二：Image Calibration 过程**
-你也可以在 PixInsight 的 `Image Calibration` 过程中使用它作为 Flat Field。只需将 `final_flatfield.tiff` 选入 Flat Field 栏位即可：
+你也可以在 PixInsight 的 `Image Calibration` 过程中使用它作为 Flat Field. 只需将 `final_flatfield.tiff` 选入 Flat Field 栏位即可：
 
-![Image Calibration](./imgs/image_calibration.png)
+<img src="./imgs/image_calibration.png" alt="Image Calibration" style="max-width: 300px;" />
 
 ## 项目结构
 
