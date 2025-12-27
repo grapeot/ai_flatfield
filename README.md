@@ -66,7 +66,8 @@ python main.py --input your_file.ser
 
 生成的 `final_flatfield.tiff` 是 16 位格式（65535 对应 1.0）。你可以：
 *   在 **PixelMath** 中使用 `$T / final_flatfield` 直接校准。
-*   在 **Image Calibration** 过程中将其选为 Flat Field 文件。
+*   在 **Image Calibration** 过程中将其选为 Flat Field 文件：
+    ![Image Calibration](./imgs/image_calibration.jpg)
 
 ## 项目结构
 

@@ -66,7 +66,8 @@ The program runs in an interactive wizard mode. You can preview and confirm AI r
 
 The output `final_flatfield.tiff` is a 16-bit image (65535 maps to 1.0). You can:
 *   Apply it directly in **PixelMath** using `$T / final_flatfield`.
-*   Use it as a Flat Field in the **Image Calibration** process.
+*   Use it as a Flat Field in the **Image Calibration** process:
+    ![Image Calibration](./imgs/image_calibration.jpg)
 
 ## Project Structure
 
